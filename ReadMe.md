@@ -4,7 +4,7 @@ This repo is for the systematic review article, 'Adaptation action and research 
 
 
 
-Full article details will be availabe when published:
+Full article details will be available when published:
 
 McDowell, G., Huggel, C., Frey, H., Wang, F., Cramer, R., Ricciardi, V.  (in review) Adaptation action and research in glaciated mountain  systems: Are they enough to meet the challenge of climate change?
 
