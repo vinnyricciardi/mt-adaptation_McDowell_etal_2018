@@ -155,7 +155,16 @@ body <- dashboardBody(
     column(
       width = 3,
       plotOutput("plot1", height = "350px")
+      ),
+    
+    column(
+      width = 12,
+      tags$a(
+        href="https://github.com/vinnyricciardi/mt-adaptation_McDowell_etal_2018", 
+        "Fork our GitHub repo to make your own map",
+        target = "_blank"
       )
+    )
   )
 )
 
