@@ -52,19 +52,21 @@ server <- function(input, output) {
 
     # Reactivity
     year <- reactive(input$year)
-    type <- reactive(input$type_A)
+    typeA <- reactive(input$type_A)
+    # typeB <- reactive(input$type_B)
+    # typeC <- reactive(input$type_C)
     freetext <- reactive(input$freeText)
     author <- reactive(input$author)
 
-    if (length(author()) > 0 & length(type()) > 0){
+    if (length(author()) > 0 & length(typeA()) > 0) {
       
       sites <- data.frame()
-      for (i in author()){
+      for (i in author()) {
         tmp <- df %>% filter(grepl(i, StudyAuthors, ignore.case = T))
         sites <- rbind(sites, tmp)
       }
       
-      for (i in type()){
+      for (i in typeA()) {
         tmp <- sites %>% filter(grepl(i, Type_A, ignore.case = T))
         sites <- rbind(sites, tmp)
       }
@@ -76,10 +78,10 @@ server <- function(input, output) {
         )
     }
     
-    else if (length(author()) > 0 & length(type()) == 0){
+    else if (length(author()) > 0 & length(typeA()) == 0) {
       
       sites <- data.frame()
-      for (i in author()){
+      for (i in author()) {
         tmp <- df %>% filter(grepl(i, StudyAuthors, ignore.case = T))
         sites <- rbind(sites, tmp)
       }
@@ -91,10 +93,10 @@ server <- function(input, output) {
         )
     }
     
-    else if (length(author()) == 0 & length(type()) > 0){
+    else if (length(author()) == 0 & length(typeA()) > 0) {
       
       sites <- data.frame()
-      for (i in type()){
+      for (i in typeA()) {
         tmp <- df %>% filter(grepl(i, Type_A, ignore.case = T))
         sites <- rbind(sites, tmp)
       }
@@ -211,8 +213,8 @@ server <- function(input, output) {
           )
         ) %>%
       
-      # addSearchGoogle(
-      #   apikey = 'AIzaSyB0NqMRf7PoB7KOqz3aGL06S6KYn41q0dQ',
+      # addSearchGoogle(               # Note, I find OSM's leaflet interface to suprisingly load faster and offer better results
+      #   apikey = 'InsertKeyHere',
       #   searchOptions(
       #     zoom = 6,
       #     autoCollapse = TRUE, 
@@ -238,13 +240,25 @@ server <- function(input, output) {
       leafletProxy("MapPlot1") %>% clearMarkerClusters() #%>% removeSearchOSM()
     })
   
-  # Map clear marker clusters when type is changed
+  # Map clear marker clusters when type A is changed
   observeEvent(
     reactive(input$type_A), {
       leafletProxy("MapPlot1") %>% clearMarkerClusters() #%>% removeSearchOSM()
     })
   
-  # Map clear marker clusters when type is changed
+  # Map clear marker clusters when type B is changed
+  observeEvent(
+    reactive(input$type_B), {
+      leafletProxy("MapPlot1") %>% clearMarkerClusters() #%>% removeSearchOSM()
+    })
+  
+  # Map clear marker clusters when type C is changed
+  observeEvent(
+    reactive(input$type_C), {
+      leafletProxy("MapPlot1") %>% clearMarkerClusters() #%>% removeSearchOSM()
+    })
+  
+  # Map clear marker clusters when free text is changed
   observeEvent(
     reactive(input$freetext), {
       leafletProxy("MapPlot1") %>% clearMarkerClusters() #%>% removeSearchOSM()
@@ -262,70 +276,88 @@ server <- function(input, output) {
     leafletProxy("MapPlot1") %>% clearMarkerClusters() #%>% removeSearchOSM()
     
     year <- reactive(input$year)
-    type <- reactive(input$type_A)
+    typeA <- reactive(input$type_A)
+    typeB <- reactive(input$type_B)
+    typeC <- reactive(input$type_C)
     freetext <- reactive(input$freeText)
     author <- reactive(input$author)
     
-    if (length(author()) > 0 & length(type()) > 0){
-      
-      sites <- data.frame()
-      for (i in author()){
-        tmp <- df %>% filter(grepl(i, StudyAuthors, ignore.case = T))
-        sites <- rbind(sites, tmp)
-      }
-      
-      for (i in type()){
-        tmp <- sites %>% filter(grepl(i, Type_A, ignore.case = T))
-        sites <- rbind(sites, tmp)
-      }
-      
-      sites <- sites %>%
-        filter(
-          Year %in% c(year()[1]:year()[2]) &
-            grepl(freetext(), freeTextLookup, ignore.case = T)
-        )
-    }
+    ################## New Loop Begin ################## 
     
-    else if (length(author()) > 0 & length(type()) == 0){
-      
-      sites <- data.frame()
-      for (i in author()){
-        tmp <- df %>% filter(grepl(i, StudyAuthors, ignore.case = T))
-        sites <- rbind(sites, tmp)
-      }
-      
-      sites <- sites %>%
-        filter(
-          Year %in% c(year()[1]:year()[2]) &
-            grepl(freetext(), freeTextLookup, ignore.case = T)
-        )
-    }
+    # Advanced search capabilities
     
-    else if (length(author()) == 0 & length(type()) > 0){
+    sites <- df %>% 
+      filter(grepl(paste(author(), collapse='|'), StudyAuthors, ignore.case = T)) %>%
+      filter(grepl(paste(typeA(), collapse='|'),  Type_A, ignore.case = T)) %>%
+      filter(grepl(paste(typeB(), collapse='|'),  Type_B, ignore.case = T)) %>%
+      filter(grepl(paste(typeC(), collapse='|'),  Type_C, ignore.case = T)) %>%
+      filter(Year %in% c(year()[1]:year()[2]) &
+             grepl(freetext(), freeTextLookup, ignore.case = T))
       
-      sites <- data.frame()
-      for (i in type()){
-        tmp <- df %>% filter(grepl(i, Type_A, ignore.case = T))
-        sites <- rbind(sites, tmp)
-      }
-      
-      sites <- sites %>%
-        filter(
-          Year %in% c(year()[1]:year()[2]) &
-            grepl(freetext(), freeTextLookup, ignore.case = T)
-        )
-    }
+
+    ################## New Loop End ################## 
+    ################## Original Loop Begin ################## 
+    # if (length(author()) > 0 & length(typeA()) > 0) {
+    # 
+    #   sites <- data.frame()
+    #   for (i in author()) {
+    #     tmp <- df %>% filter(grepl(i, StudyAuthors, ignore.case = T))
+    #     sites <- rbind(sites, tmp)
+    #   }
+    # 
+    #   for (i in typeA()) {
+    #     tmp <- sites %>% filter(grepl(i, Type_A, ignore.case = T))
+    #     sites <- rbind(sites, tmp)
+    #   }
+    # 
+    #   sites <- sites %>%
+    #     filter(
+    #       Year %in% c(year()[1]:year()[2]) &
+    #         grepl(freetext(), freeTextLookup, ignore.case = T)
+    #     )
+    # }
+    # 
+    # else if (length(author()) > 0 & length(typeA()) == 0) {
+    # 
+    #   sites <- data.frame()
+    #   for (i in author()) {
+    #     tmp <- df %>% filter(grepl(i, StudyAuthors, ignore.case = T))
+    #     sites <- rbind(sites, tmp)
+    #   }
+    # 
+    #   sites <- sites %>%
+    #     filter(
+    #       Year %in% c(year()[1]:year()[2]) &
+    #         grepl(freetext(), freeTextLookup, ignore.case = T)
+    #     )
+    # }
+    # 
+    # else if (length(author()) == 0 & length(typeA()) > 0) {
+    # 
+    #   sites <- data.frame()
+    #   for (i in typeA()) {
+    #     tmp <- df %>% filter(grepl(i, Type_A, ignore.case = T))
+    #     sites <- rbind(sites, tmp)
+    #   }
+    # 
+    #   sites <- sites %>%
+    #     filter(
+    #       Year %in% c(year()[1]:year()[2]) &
+    #         grepl(freetext(), freeTextLookup, ignore.case = T)
+    #     )
+    # }
+    # 
+    # else {
+    # 
+    #   sites <- df %>% filter(
+    #     Year %in% c(year()[1]:year()[2]) &
+    #       grepl(freetext(), freeTextLookup, ignore.case = T)
+    #   )
+    # }
     
-    else {
-      
-      sites <- df %>% filter(
-        Year %in% c(year()[1]:year()[2]) &
-          grepl(freetext(), freeTextLookup, ignore.case = T)
-      )
-    }
+    ################## Original Loop End ################## 
     
-    
-    sites <- unique(sites[ , c(3:7, 9, 13, 14, 15)])
+    sites <- unique(sites[ , c(3:7, 9, 13, 14, 15, 17)])
     sites <-  na.omit(sites)
     
     content <- paste0(
@@ -356,8 +388,3 @@ server <- function(input, output) {
 
   })
 }
-
-
-
-
-##################### TEST #####################
