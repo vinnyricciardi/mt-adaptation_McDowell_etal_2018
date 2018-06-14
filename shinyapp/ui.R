@@ -122,21 +122,39 @@ body <- dashboardBody(
                              multiple = T
                            ),
                            
-                           # Type select
+                           # Type A select
                            selectInput(
                              inputId  = "type_A",
                              label    = "Select adaptation type(s)",
                              choices  = sort(unique(unlist(strsplit(unique(df$Type_A), ',')))),
                              selected = "",
                              multiple = T
-                             )
+                             ),
+                           
+                           # Type B select
+                           selectInput(
+                             inputId  = "type_B",
+                             label    = "Select scale of adaptation",
+                             choices  = sort(unique(unlist(strsplit(unique(df$Type_B), ',')))),
+                             selected = "",
+                             multiple = T
+                           ),
+                           
+                           # Type C select
+                           selectInput(
+                             inputId  = "type_C",
+                             label    = "Select status of adaptation",
+                             choices  = sort(unique(unlist(strsplit(unique(df$Type_C), ',')))),
+                             selected = "",
+                             multiple = T
                            )
                   )
+      )
     ),
     
     column(
       width = 3,
-      plotOutput("plot1", height="350px")
+      plotOutput("plot1", height = "350px")
       )
   )
 )

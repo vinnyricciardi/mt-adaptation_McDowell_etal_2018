@@ -357,7 +357,8 @@ server <- function(input, output) {
     
     ################## Original Loop End ################## 
     
-    sites <- unique(sites[ , c(3:7, 9, 13, 14, 15, 17)])
+    
+    sites <- unique(sites[ , c(3:7, 9, 13:17)])
     sites <-  na.omit(sites)
     
     content <- paste0(
