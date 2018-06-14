@@ -160,7 +160,7 @@ body <- dashboardBody(
     column(
       width = 12,
       tags$a(
-        href="https://github.com/vinnyricciardi/mt-adaptation_McDowell_etal_2018", 
+        href = "https://github.com/vinnyricciardi/mt-adaptation_McDowell_etal_2018", 
         "Fork our GitHub repo to make your own map",
         target = "_blank"
       )
