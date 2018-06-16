@@ -22,6 +22,8 @@ options(shiny.error = function() {
 # Read data
 df <- read.csv("data.csv", stringsAsFactors = FALSE)
 # df <- unique(df[ , 2:13])  # make sure to do this in pre-processing (need lookup column)
+df <- df[which(df$StudyLoc != ''), ]
+
 df <- df[complete.cases(df[, c('lats', 'longs')]), ]
 
 df$StudyID <- str_replace_all(df$StudyID, "dx.doi.org/", "")
