@@ -14,7 +14,7 @@ backports.ssl-match-hostname==3.4.0.2
 BeautifulSoup==3.2.1
 beautifulsoup4==4.4.1
 bibtexparser==0.6.2
-bleach==2.0.0
+bleach==3.1.4
 bokeh==0.12.5
 Bottleneck==1.0.0
 brewer2mpl==1.4.1
