@@ -177,7 +177,7 @@ pyexcel-io==0.1.0
 pyexcel-xlsx==0.1.0
 pyflakes==1.2.3
 pyglet==1.2.4
-Pygments==2.2.0
+Pygments==2.7.4
 pygubu==0.9.7.8
 pylint==1.6.4
 pymc==2.3.6
